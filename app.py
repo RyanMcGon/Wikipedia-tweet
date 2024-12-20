@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
 import wikipediaapi
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Add CORS middleware to allow requests from Weweb
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace with your Weweb domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Create a user agent string that identifies your application
 user_agent = "WikipediaContentAPI/1.0 (https://your-website.com; your@email.com)"
@@ -15,11 +25,11 @@ wiki = wikipediaapi.Wikipedia(
 class WikiRequest(BaseModel):
     url: str
 
-@app.post("/get-wiki-content")
-async def get_wiki_content(request: WikiRequest):
+@app.get("/get-wiki-content")
+async def get_wiki_content(url: str):
     try:
         # Extract the page title from the URL
-        page_title = request.url.split("/wiki/")[-1].replace("_", " ")
+        page_title = url.split("/wiki/")[-1].replace("_", " ")
         
         # Get the Wikipedia page
         page = wiki.page(page_title)
