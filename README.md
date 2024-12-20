@@ -1,2 +1,7 @@
-# Wikipedia-tweet
-An api to scrape wikipedia based off a link
+# Wikipedia Content API
+
+A FastAPI-based API that fetches content from Wikipedia articles.
+
+## Setup
+
+1. Install dependencies:
